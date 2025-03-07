@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authorize from "../middlewares/auth.middleware.js";
 import { createSubscription ,  getUserSubscriptions } from "../controllers/subscription.controller.js";
+import { sendReminders } from "../controllers/workflow.controller.js";
 
 const subscriptionRouter = Router();
 
@@ -31,5 +32,6 @@ subscriptionRouter.put('/:id/cancel', (req,res)=>{
 subscriptionRouter.get('/upcoming-renewals', (req,res)=>{
     res.send("get upcoming renewals");
 })
+subscriptionRouter.post('/reminder', sendReminders);
 
 export default subscriptionRouter;
