@@ -78,4 +78,20 @@ export const signIn = async (req, res , next) => {
     }
 };
 
-export const signOut = async (req, res , next) => {};
+const blacklistedTokens = new Set();
+
+export const signOut = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1]; // Get token from header
+
+        if (!token) {
+            return res.status(400).json({ success: false, message: "No token provided" });
+        }
+
+        blacklistedTokens.add(token);
+        res.status(200).json({ success: true, message: "User signed out successfully" });
+
+    } catch (error) {
+        next(error);
+    }
+};
