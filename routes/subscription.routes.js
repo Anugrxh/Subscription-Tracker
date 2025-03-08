@@ -1,37 +1,28 @@
 import { Router } from "express";
 import authorize from "../middlewares/auth.middleware.js";
-import { createSubscription ,  getUserSubscriptions } from "../controllers/subscription.controller.js";
+import { 
+    createSubscription, 
+    getUserSubscriptions,  
+    getSubscriptionById, 
+    updateSubscription, 
+    deleteSubscription, 
+    cancelSubscription, 
+    getUpcomingRenewals,
+    
+} from "../controllers/subscription.controller.js";
 import { sendReminders } from "../controllers/workflow.controller.js";
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', (req,res)=>{
-    res.send("GET all subscriptions");
-})
+subscriptionRouter.post('/', authorize, createSubscription);
+subscriptionRouter.get('/user/:id', authorize, getUserSubscriptions);
 
-subscriptionRouter.get('/:id', (req,res)=>{
-    res.send("GET subscription by id");
-})
-subscriptionRouter.post('/',authorize, createSubscription )
+subscriptionRouter.get('/upcoming-renewals', authorize, getUpcomingRenewals);
+subscriptionRouter.get('/:id', authorize, getSubscriptionById);
+subscriptionRouter.put('/:id', authorize, updateSubscription);
+subscriptionRouter.delete('/:id', authorize, deleteSubscription);
+subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
 
-subscriptionRouter.put('/:id', (req,res)=>{
-    res.send("PUT Update subscription by id");
-})
-
-subscriptionRouter.delete('/:id', (req,res)=>{
-    res.send("DELETE subscription by id");
-})
-
-subscriptionRouter.get('/user/:id', authorize,getUserSubscriptions)
-
-subscriptionRouter.put('/:id/cancel', (req,res)=>{
-    res.send("PUT Cancel subscription by user id");
-})
-
-
-subscriptionRouter.get('/upcoming-renewals', (req,res)=>{
-    res.send("get upcoming renewals");
-})
 subscriptionRouter.post('/reminder', sendReminders);
 
 export default subscriptionRouter;
